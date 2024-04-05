@@ -32,5 +32,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Rollback
+      - uses: actions/checkout@v2
+      - name: Checkout
+        run: |
+          chmod +x ./test.sh
+
+      - name: Run rollback script
         run: ./test.sh "${{ github.event.inputs.environment }}" "${{ github.event.inputs.repo }}" "${{ github.event.inputs.tag }}" "${{ github.event.inputs.rancherProjectID }}" "${{ github.event.inputs.rancherKey }}"
