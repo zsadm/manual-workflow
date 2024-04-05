@@ -1,26 +1,36 @@
-name: Mixed inputs
+name: Rollback
 
 on:
   workflow_dispatch:
     inputs:
-      name:
-        type: choice
-        description: Who to greet
-        options:
-          - monalisa
-          - cschleiden
-      message:
-        required: true
-      use-emoji:
-        type: boolean
-        description: Include 🎉🤣 emojis
       environment:
-        type: environment
+        description: Environment
+        type: choice
+        required: true
+        options:
+          - PreProduction
+          - Production
+      repo:
+        description: Repository
+        type: string
+        required: true
+      tag:
+        description: Tag to rollback to
+        type: string
+        required: true
+      rancherProjectID:
+        description: Rancher project id
+        type: string
+        required: true
+      rancherKey:
+        description: Rancher key
+        type: string
+        required: true
 
 jobs:
-  greet:
+  rollback:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Send greeting
-        run: echo "${{ github.event.inputs.message }} ${{ fromJSON('["", "🥳"]')[github.event.inputs.use-emoji == 'true'] }} ${{ github.event.inputs.name }}"
+      - name: Rollback
+        run: ./test.sh "${{ github.event.inputs.environment }}" "${{ github.event.inputs.repo }}" "${{ github.event.inputs.tag }}" "${{ github.event.inputs.rancherProjectID }}" "${{ github.event.inputs.rancherKey }}"
